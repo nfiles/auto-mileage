@@ -1,0 +1,16 @@
+<form [formGroup]="form">
+  <div class="form-group">
+    <label for="date">Date</label>
+    <input type="text" class="form-control" id="date" bsDatepicker formControlName="date">
+  </div>
+  <div class="form-group">
+    <label for="miles">Miles</label>
+    <input type="number" class="form-control" id="miles" formControlName="miles">
+  </div>
+  <div class="form-group">
+    <label for="gallons">Gallons</label>
+    <input type="text" class="form-control" id="gallons" formControlName="gallons">
+  </div>
+</form>
+
+<pre>{{ form.valueChanges | async | json }}</pre>
