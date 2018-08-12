@@ -1,0 +1,32 @@
+version: "3.2"
+services:
+  web:
+    build:
+      context: ./clientapp
+      dockerfile: Dockerfile-dev
+    networks:
+      overlay: {}
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./clientapp:/app
+  functions:
+    build: ./functions
+    ports:
+      - "8080:80"
+  storage:
+    image: arafato/azurite
+    networks:
+      overlay: {}
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - storage-data:/opt/azurite/folder
+
+volumes:
+  storage-data: {}
+
+networks:
+  overlay: {}
