@@ -15,6 +15,10 @@ before_install:
       -u "$CICD_AUTH_NAME" \
       -p "$CICD_AUTH_PASSWORD" \
       --tenant "$CICD_AUTH_TENANT"
+script:
+  - pushd ./clientapp
+  - npm run build
+  - popd
 deploy:
   - provider: script
     script:
