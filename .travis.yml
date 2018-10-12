@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "node"
+  - "lts/*"
+python:
+  - "3.7"
+before_install:
+  - ./install-azure-cli.sh
+  - ./install-func-tools.sh
+  - |
+    az login \
+      --service-principal \
+      -u "$CICD_AUTH_NAME" \
+      -p "$CICD_AUTH_PASSWORD" \
+      --tenant "$CICD_AUTH_TENANT"
+script:
+  # deploy function app
+  - pushd ./functions
+  - func azure functionapp publish --name "$FUNCTIONAPP_NAME"
+  - popd
