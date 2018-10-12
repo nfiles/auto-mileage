@@ -12,7 +12,7 @@ before_install:
   - sudo apt-get install apt-transport-https
   - sudo apt-get update && sudo apt-get install azure-cli
   # - ./scripts/install-azure-cli.sh
-  - sudo ./scripts/install-func-tools.sh
+  - sudo bash ./scripts/install-func-tools.sh
   - |
     az login \
       --service-principal \
