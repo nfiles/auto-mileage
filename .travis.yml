@@ -31,8 +31,5 @@ script:
   - popd
 deploy:
   - provider: script
-    script:
-      # deploy function app
-      - pushd ./functions
-      - func azure functionapp publish --name "$FUNCTIONAPP_NAME"
-      - popd
+    skip_cleanup: true
+    script: deploy.sh
