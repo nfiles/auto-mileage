@@ -1,12 +1,9 @@
 #! /bin/bash
 
-URL="https://github.com/Azure/azure-functions-core-tools/releases/download/2.0.3/Azure.Functions.Cli.linux-x64.2.0.3.zip"
-DEST="/azure-functions-cli"
-
+VERSION_NUMBER="$(lsb_release -rs)"
+URL="https://packages.microsoft.com/config/ubuntu/$VERSION_NUMBER/packages-microsoft-prod.deb"
 wget -q "$URL"
+sudo dpkg -i packages-microsoft-prod.deb
 
-mkdir "$DEST"
-unzip -q -d "$DEST" Azure.Functions.Cli.linux-x64.*.zip
-
-chmod +x "$DEST/func"
-export PATH=$DEST/func:$PATH
+sudo apt-get update
+sudo apt-get install azure-functions-core-tools --no-install-recommends -y
