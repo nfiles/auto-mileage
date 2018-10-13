@@ -23,13 +23,4 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    before_script: 
-      - sudo bash ./scripts/install-azure-cli.sh
-      - sudo bash ./scripts/install-func-tools.sh
-      - |
-        az login \
-          --service-principal \
-          -u "$CICD_AUTH_NAME" \
-          -p "$CICD_AUTH_PASSWORD" \
-          --tenant "$CICD_AUTH_TENANT"
     script: bash ./scripts/deploy.sh
