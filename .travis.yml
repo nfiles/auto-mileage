@@ -20,6 +20,16 @@ script:
   - pushd ./clientapp
   - npm run build
   - popd
+before_deploy:
+  # install required tools and authenticate with azure
+  - sudo bash ./scripts/install-azure-cli.sh
+  - sudo bash ./scripts/install-func-tools.sh
+  - |
+    az login \
+      --service-principal \
+      -u "$CICD_AUTH_NAME" \
+      -p "$CICD_AUTH_PASSWORD" \
+      --tenant "$CICD_AUTH_TENANT"
 deploy:
   - provider: script
     skip_cleanup: true
