@@ -1,7 +1,9 @@
 #! /bin/bash
 
 # publish the function app
-pushd ./function
+echo "func path: $(which func)"
+pushd ./functions
+echo "func path: $(which func)"
 func azure functionapp publish "$FUNCTIONAPP_NAME" || exit $?
 popd
 
