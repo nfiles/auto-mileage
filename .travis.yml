@@ -8,10 +8,11 @@ python:
 addons:
   apt:
     packages:
-      - wget
-      - unzip
-      - curl
       - apt-transport-https
+      - curl
+      - lsb-relase
+      - unzip
+      - wget
 install:
   - pushd ./clientapp
   - npm install --no-optional
