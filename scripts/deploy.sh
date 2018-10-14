@@ -6,7 +6,7 @@ az login \
     -u "$CICD_AUTH_NAME" \
     -p "$CICD_AUTH_PASSWORD" \
     --tenant "$CICD_AUTH_TENANT" \
-    | /dev/null > \
+    > /dev/null \
     || exit $?
 
 az account show
