@@ -1,5 +1,9 @@
 #! /bin/bash
 
+function sudo {
+    $*
+}
+
 VERSION_NUMBER="$(lsb_release -rs)"
 URL="https://packages.microsoft.com/config/ubuntu/$VERSION_NUMBER/packages-microsoft-prod.deb"
 wget -q "$URL"

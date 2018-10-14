@@ -10,7 +10,7 @@ addons:
     packages:
       - apt-transport-https
       - curl
-      - lsb-relase
+      - lsb-release
       - unzip
       - wget
 install:
