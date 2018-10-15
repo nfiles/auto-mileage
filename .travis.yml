@@ -33,7 +33,7 @@ deploy:
   - provider: script
     skip_cleanup: true
     script: |
-      docker build -t cicd-deploy -f Dockerfile.deploy . && \
+      docker build -t cicd-deploy -f Dockerfile.deploy .
       docker run cicd-deploy \
         --rm \
         -e TRAVIS \
