@@ -1,0 +1,51 @@
+FROM node:10-alpine as build
+LABEL Author="nathanwfiles@gmail.com"
+
+ENV DEPLOY_DIR=/app
+
+# build the clientapp
+RUN mkdir -p ${DEPLOY_DIR}/clientapp
+WORKDIR ${DEPLOY_DIR}/clientapp
+
+COPY ./clientapp .
+
+RUN npm install --no-optional \
+    && npm run build
+
+# # build the azure function
+# RUN mkdir -p ${DEPLOY_DIR}/functions
+# WORKDIR ${DEPLOY_DIR}/functions
+
+# COPY ./functions .
+
+# RUN npm install --no-optional \
+#     && npm run build
+
+FROM ubuntu:18.04 as deploy
+ENV DEPLOY_DIR=/app
+RUN mkdir -p ${DEPLOY_DIR}
+WORKDIR ${DEPLOY_DIR}
+
+# deploy variables
+ARG TRAVIS
+ARG CICD_AUTH_NAME
+ARG CICD_AUTH_PASSWORD
+ARG CICD_AUTH_TENANT
+ARG FUNCTIONAPP_NAME
+
+COPY ./scripts /scripts
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        lsb-release \
+        wget \
+        curl \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+    && bash /scripts/install-azure-cli.sh \
+    && bash /scripts/install-func-tools.sh
+COPY --from=build ${DEPLOY_DIR}/clientapp/dist/clientapp ${DEPLOY_DIR}/clientapp
+
+# deploy app
+CMD [ "sh", "/scripts/deploy.sh" ]

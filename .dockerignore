@@ -1,0 +1,10 @@
+Dockerfile*
+**/Dockerfile*
+docker-compose.yml
+
+.secrets.json
+.vscode
+
+*/node_modules
+
+travis.yml

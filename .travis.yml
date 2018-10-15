@@ -1,31 +1,43 @@
-sudo: required
-language: node_js
-node_js:
-  # - "node"
-  - "lts/*"
-python:
-  - "3.7"
-addons:
-  apt:
-    packages:
-      - apt-transport-https
-      - curl
-      - lsb-release
-      - unzip
-      - wget
+# sudo: required
+# language: node_js
+# node_js:
+#   # - "node"
+#   - "lts/*"
+# python:
+#   - "3.7"
+services:
+  - docker
+# addons:
+#   apt:
+#     packages:
+#       - apt-transport-https
+#       - curl
+#       - lsb-release
+#       - unzip
+#       - wget
 install:
-  - pushd ./clientapp
-  - npm install --no-optional
-  - popd
+  - echo install
+#   - pushd ./clientapp
+#   - npm install --no-optional
+#   - popd
 script:
-  - pushd ./clientapp
-  - npm run build
-  - popd
-before_deploy:
-  # install required tools
-  - sudo bash ./scripts/install-azure-cli.sh
-  - sudo bash ./scripts/install-func-tools.sh
+  - echo script
+#   - pushd ./clientapp
+#   - npm run build
+#   - popd
+# before_deploy:
+#   # install required tools
+#   - sudo bash ./scripts/install-azure-cli.sh
+#   - sudo bash ./scripts/install-func-tools.sh
 deploy:
   - provider: script
     skip_cleanup: true
-    script: bash ./scripts/deploy.sh
+    script: |
+      docker build -t cicd-deploy -f Dockerfile.deploy . && \
+      docker run cicd-deploy \
+        --rm \
+        -e TRAVIS \
+        -e CICD_AUTH_NAME \
+        -e CICD_AUTH_PASSWORD \
+        -e CICD_AUTH_TENANT \
+        -e FUNCTIONAPP_NAME
