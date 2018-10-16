@@ -25,7 +25,6 @@ ID=""
 
 LOCATION="eastus2"
 RESOURCE_GROUP="auto-mileage$ID"
-APPSERVICE_NAME="service-plan$ID"
 STORAGE_ACCONT="automileagestorage$ID"
 FUNCTIONAPP_NAME="auto-mileage-func$ID"
 CICD_AUTH_NAME="auto-mileage-cicd$ID"
@@ -46,18 +45,6 @@ RESOURCE_GROUP_ID="$(az group show \
                         --name "$RESOURCE_GROUP" \
                         --query "id" \
                         --output tsv)"
-
-# create the app service plan
-az appservice plan create \
-    --resource-group "$RESOURCE_GROUP" \
-    --name "$APPSERVICE_NAME" \
-    --is-linux \
-    --location "$LOCATION" \
-    > /dev/null
-
-if [ $status -ne 0 ]; then
-    exit $status
-fi
 
 # create the storage account
 az storage account create \
@@ -101,7 +88,7 @@ fi
 
 # create the functionapp
 az functionapp create \
-    --plan "$APPSERVICE_NAME" \
+    --consumption-plan-location "$LOCATION" \
     --resource-group "$RESOURCE_GROUP" \
     --name "$FUNCTIONAPP_NAME" \
     --storage-account "$STORAGE_ACCONT" \
