@@ -12,8 +12,8 @@ az login \
 az account show
 
 # publish the function app
-pushd ./functions
+cd ./functions
 func azure functionapp publish "$FUNCTIONAPP_NAME" || exit $?
-popd
+cd ..
 
 # TODO: publish the client app
