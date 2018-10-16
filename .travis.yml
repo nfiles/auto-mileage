@@ -18,4 +18,4 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: docker run --rm -e TRAVIS -e CICD_AUTH_NAME -e CICD_AUTH_PASSWORD -e CICD_AUTH_TENANT -e FUNCTIONAPP_NAME -v ./scripts:/scripts -v ./functions:/functions -v ./clientapp:/clientapp cicd-deploy bash /scripts/deploy.sh
+    script: docker run --rm -e TRAVIS -e CICD_AUTH_NAME -e CICD_AUTH_PASSWORD -e CICD_AUTH_TENANT -e FUNCTIONAPP_NAME -v $PWD/scripts:/scripts -v $PWD/functions:/functions -v $PWD/clientapp:/clientapp cicd-deploy bash /scripts/deploy.sh
