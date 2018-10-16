@@ -1,11 +1,9 @@
 FROM node:10-alpine as build
 LABEL Author="nathanwfiles@gmail.com"
 
-ENV DEPLOY_DIR=/app
-
 # build the clientapp
-RUN mkdir -p ${DEPLOY_DIR}/clientapp
-WORKDIR ${DEPLOY_DIR}/clientapp
+RUN mkdir -p /app/clientapp
+WORKDIR /app/clientapp
 
 COPY ./clientapp .
 
@@ -13,8 +11,8 @@ RUN npm install --no-optional \
     && npm run build
 
 # build the azure function
-RUN mkdir -p ${DEPLOY_DIR}/functions
-WORKDIR ${DEPLOY_DIR}/functions
+RUN mkdir -p /app/functions
+WORKDIR /app/functions
 
 COPY ./functions .
 
@@ -23,9 +21,6 @@ COPY ./functions .
 #     && npm run build
 
 FROM ubuntu:18.04 as deploy
-ENV DEPLOY_DIR=/app
-RUN mkdir -p ${DEPLOY_DIR}
-WORKDIR ${DEPLOY_DIR}
 
 # deploy variables
 ARG TRAVIS
@@ -46,8 +41,10 @@ RUN apt-get update \
         gnupg \
     && bash /scripts/install-azure-cli.sh \
     && bash /scripts/install-func-tools.sh
-COPY --from=build ${DEPLOY_DIR}/clientapp/dist/clientapp ${DEPLOY_DIR}/clientapp
-COPY --from=build ${DEPLOY_DIR}/functions ${DEPLOY_DIR}/functions
+RUN mkdir -p /app/clientapp \
+    && mkdir -p /app/functions
+COPY --from=build /app/clientapp/dist/clientapp /app/clientapp
+COPY --from=build /app/functions /app/functions
 
 # deploy app
 CMD [ "sh", "/scripts/deploy.sh" ]
