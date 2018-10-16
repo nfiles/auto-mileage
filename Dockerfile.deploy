@@ -12,12 +12,13 @@ COPY ./clientapp .
 RUN npm install --no-optional \
     && npm run build
 
-# # build the azure function
-# RUN mkdir -p ${DEPLOY_DIR}/functions
-# WORKDIR ${DEPLOY_DIR}/functions
+# build the azure function
+RUN mkdir -p ${DEPLOY_DIR}/functions
+WORKDIR ${DEPLOY_DIR}/functions
 
-# COPY ./functions .
+COPY ./functions .
 
+# TODO: compile azure function from TypeScript
 # RUN npm install --no-optional \
 #     && npm run build
 
@@ -46,6 +47,7 @@ RUN apt-get update \
     && bash /scripts/install-azure-cli.sh \
     && bash /scripts/install-func-tools.sh
 COPY --from=build ${DEPLOY_DIR}/clientapp/dist/clientapp ${DEPLOY_DIR}/clientapp
+COPY --from=build ${DEPLOY_DIR}/functions ${DEPLOY_DIR}/functions
 
 # deploy app
 CMD [ "sh", "/scripts/deploy.sh" ]
