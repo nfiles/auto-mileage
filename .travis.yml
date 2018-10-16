@@ -1,35 +1,32 @@
-# sudo: required
-# language: node_js
-# node_js:
-#   # - "node"
-#   - "lts/*"
-# python:
-#   - "3.7"
+language: node_js
+node_js:
+  # - "node"
+  - "lts/*"
 services:
   - docker
-# addons:
-#   apt:
-#     packages:
-#       - apt-transport-https
-#       - curl
-#       - lsb-release
-#       - unzip
-#       - wget
 install:
-  - echo install
-#   - pushd ./clientapp
-#   - npm install --no-optional
-#   - popd
+  - pushd ./clientapp
+  - npm install --no-optional
+  - popd
 script:
-  - echo script
-#   - pushd ./clientapp
-#   - npm run build
-#   - popd
-# before_deploy:
-#   # install required tools
-#   - sudo bash ./scripts/install-azure-cli.sh
-#   - sudo bash ./scripts/install-func-tools.sh
+  - pushd ./clientapp
+  - npm run build
+  - popd
+  # TODO: compile azure function from TypeScript
+before_deploy:
+  - docker build --rm --force-rm -t cicd-deploy -f Dockerfile.deploy .
 deploy:
   - provider: script
     skip_cleanup: true
-    script: bash ./scripts/travis-deploy.sh
+    script: |
+      docker run --rm \
+        -e TRAVIS \
+        -e CICD_AUTH_NAME \
+        -e CICD_AUTH_PASSWORD \
+        -e CICD_AUTH_TENANT \
+        -e FUNCTIONAPP_NAME \
+        -v ./scripts:/scripts \
+        -v ./functions:/functions \
+        -v ./clientapp:/clientapp \
+        cicd-deploy \
+        bash /scripts/deploy.sh
